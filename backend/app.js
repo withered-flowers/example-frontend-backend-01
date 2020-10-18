@@ -8,9 +8,18 @@ const express = require('express');
 // invoke express, sebagai app
 const app = express();
 
+// untuk handle cors (cross origin resource sharing)
+const cors = require('cors')
+
 // setting port
 // defaultnya untuk express dalam mode dev adalah 3000
 const port = 3000;
+
+// enable cors di express
+// sekaligus enable origin dari semua (dev only yah !)
+app.use(cors({
+  origin: '*'
+}));
 
 // buat routing / endpoint
 // method HTTP GET = app.get

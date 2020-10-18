@@ -10,23 +10,25 @@
 </head>
 
 <body>
-  <h3>This is Just a Testing App</h3>
+  <div class="container">
+    <h3>This is Just a Testing App</h3>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Id</th>
-        <th>Full Name</th>
-        <th>Company</th>
-        <th>Email</th>
-      </tr>
-    </thead>
+    <table>
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Full Name</th>
+          <th>Company</th>
+          <th>Email</th>
+        </tr>
+      </thead>
 
-    <!-- Nanti data akan tampil di sini -->
-    <tbody id="isiTabel">
+      <!-- Nanti data akan tampil di sini -->
+      <tbody id="isiTabel">
 
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  </div>
 
   <!-- Materialize JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
@@ -37,34 +39,63 @@
     // https://gomakethings.com/how-to-use-the-fetch-api-with-vanilla-js/
 
     // ingat server express kita ada di port 3000 kan?
-    fetch('http://localhost:3000/')
-      .then(function fetchHandler(response) {
+    fetch('http://localhost:3000')
+      .then(function responseHandler(response) {
         // response = data yang diterima
 
         // pengiriman dalam bentuk string, jadi kita butuh
         // konversi ke json lagi
-        response = JSON.parse(response);
 
+        // promise based, jadi butuh return lagi
+        return response = response.json();
+      })
+
+      // data response yang ditangkap berubah nama jadi dataJSON di sini
+      .then((dataJSON) => {
         let tableContent = document.getElementById("isiTabel");
 
         let contentHtml = "";
 
-        // looping data response untuk bentuk isi tabel
-        for(let counter = 0; counter < response.length; counter++) {
+        // looping data dari dataJSON untuk bentuk isi tabel
+        for (let counter = 0; counter < dataJSON.length; counter++) {
           contentHtml += "<tr>";
-          contentHtml += "<td>" + response[counter].id + "</td>";
-          contentHtml += "<td>" + response[counter].name.first + ' ' + response[counter].name.last + ' ' + "</td>";
-          contentHtml += "<td>" + response[counter].company + "</td>";
-          contentHtml += "<td>" + response[counter].email + "</td>";
+          contentHtml += "<td>" + dataJSON[counter].id + "</td>";
+          contentHtml += "<td>" + dataJSON[counter].name.first + ' ' + dataJSON[counter].name.last + ' ' + "</td>";
+          contentHtml += "<td>" + dataJSON[counter].company + "</td>";
+          contentHtml += "<td>" + dataJSON[counter].email + "</td>";
           contentHtml += "</tr>";
         }
 
         tableContent.innerHTML = contentHtml;
       })
-      .catch(function errorHandler(err) {
+
+      // apabila terjadi error
+      .catch((err) => {
         // tampilin error ke console
         console.log(err);
       });
+
+      // bisa juga dengan menggunakan cara async / await
+      // bila menggunakan cara ini, comment line 42 - 76
+
+      // let response = await fetch('http://localhost:3000');
+      // let dataJSON = await response.json();
+
+      // let tableContent = document.getElementById("isiTabel");
+
+      // let contentHtml = "";
+
+      // // looping data dari dataJSON untuk bentuk isi tabel
+      // for (let counter = 0; counter < dataJSON.length; counter++) {
+      //   contentHtml += "<tr>";
+      //   contentHtml += "<td>" + dataJSON[counter].id + "</td>";
+      //   contentHtml += "<td>" + dataJSON[counter].name.first + ' ' + dataJSON[counter].name.last + ' ' + "</td>";
+      //   contentHtml += "<td>" + dataJSON[counter].company + "</td>";
+      //   contentHtml += "<td>" + dataJSON[counter].email + "</td>";
+      //   contentHtml += "</tr>";
+      // }
+
+      // tableContent.innerHTML = contentHtml;
   </script>
 </body>
 
